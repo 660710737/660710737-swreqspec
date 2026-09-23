@@ -13,7 +13,7 @@ Feature: จองคิวตรวจสุขภาพ (Booking) | Spec ID: S
 - ไฟล์ที่แตะ: backend/requirements.txt, backend/pytest.ini, backend/app/config.py, backend/app/db/models.py, backend/app/db/session.py, backend/app/db/migrations/001_init.py, backend/tests/conftest.py
 - ต้องทำหลัง: ไม่มี
 - เสร็จเมื่อ: รัน migration แล้วสร้างตาราง slots, bookings (ไม่มีคอลัมน์เลขบัตรประชาชน), audit_logs ได้ และ fixture ฐานข้อมูล SQLite ในหน่วยความจำใน conftest.py ใช้งานได้
-- สถานะ: พร้อมทำ
+- สถานะ: เสร็จ รอทีมตรวจ
 
 ### T-02 สร้างการตรวจสอบผลยืนยันตัวตนก่อนเข้าถึง API
 - รองรับ: IF-IDP-01

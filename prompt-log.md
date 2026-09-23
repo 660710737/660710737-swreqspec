@@ -106,3 +106,28 @@
 - NFR-SEC-01 (TLS) ไม่มี task เพราะ plan.md ไม่ได้ระบุตำแหน่งไฟล์ที่ต้องแก้ (เป็นเรื่องการตั้งค่า deployment ไม่ใช่โค้ดในโครงไฟล์ของ plan) จึงไม่เดาเพิ่ม task ขึ้นมาเอง
 
 **ยังไม่มีทีมสั่งให้เริ่มทำ task ใด ๆ**
+
+## 2569-09-23 คำสั่ง: /implement T-01 specs/001-booking/tasks.md
+
+- เครื่องมือ: Claude Code
+- ไฟล์ที่สร้าง/แก้: backend/requirements.txt (ไม่ได้แก้ ของเดิมครบอยู่แล้ว), backend/pytest.ini (ไม่ได้แก้ ของเดิมครบอยู่แล้ว),
+  backend/app/config.py, backend/app/db/models.py, backend/app/db/session.py, backend/app/db/migrations/001_init.py,
+  backend/tests/conftest.py, backend/tests/test_db_setup.py (นอกช่อง "ไฟล์ที่แตะ" เดิม — ถามทีมก่อนแล้วทีมให้เพิ่ม)
+
+### สิ่งที่เกือบต้องเดาแต่ถามแทน
+
+- T-01 ในช่อง "ตรวจด้วย" ไม่มี AC ตรง ๆ แต่ "ไฟล์ที่แตะ" ที่ร่างไว้ตอน /tasks ก็ไม่มีไฟล์ test เลย
+  ขัดกับกติกาข้อที่บอกให้เขียน test เล็ก ๆ ยืนยัน "เสร็จเมื่อ" เมื่อไม่มี AC ตรง ๆ
+  ถามทีมว่าจะเพิ่มไฟล์ test นอกรายการหรือไม่ -> ทีมเลือก "เพิ่ม backend/tests/test_db_setup.py" ถือเป็นข้อบกพร่องของ tasks.md ที่ควรแก้ในรอบ /tasks ถัดไป
+
+### ผล test
+
+```
+tests/test_db_setup.py::test_migration_creates_tables PASSED
+tests/test_db_setup.py::test_bookings_table_has_no_national_id_column PASSED
+2 passed in 0.02s
+```
+
+### สถานะ
+
+- tasks.md: T-01 เปลี่ยนเป็น "เสร็จ รอทีมตรวจ"
