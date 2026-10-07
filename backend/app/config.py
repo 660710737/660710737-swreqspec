@@ -1,4 +1,7 @@
+# อ่านค่าตั้งระบบจากตัวแปรสภาพแวดล้อม (CON-TECH-01)
 import os
 
-# CON-TECH-01: ฐานข้อมูลหลักคือ PostgreSQL แต่รับค่าต่อผ่านตัวแปรแวดล้อมเพื่อสลับฐานข้อมูลตอน test ได้โดยไม่แก้โค้ด
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql+psycopg://localhost/booking")
+# ระบบจริงตั้ง DATABASE_URL เป็น PostgreSQL ตาม CON-TECH-01
+# เช่น postgresql+psycopg://user:pass@db:5432/checkup
+# ค่าเริ่มต้นเป็น SQLite ไว้ลองรันใน Codespace เท่านั้น
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./dev.db")
