@@ -141,3 +141,32 @@
 - ผล test หลังบ้าน: 7 passed
 - endpoint ที่เหลือ: GET /slots, POST /bookings (ตรงกับ plan.md ข้อ 4 ส่วนที่ทำแล้ว)
 - ช่อง "ทีมตัดสิน" ของ F-03 ใน rtm.md ให้ทีมเขียนเอง; รอบ /verify ถัดไปจะย้าย F-03 ไปหัวข้อ "แก้แล้ว"
+
+---
+
+## 2569-10-07 คำสั่ง: แก้ ConfirmBooking.jsx ให้ตรงหมวดหน้าจอ (UI) ใน spec v3
+
+- คำสั่ง: "AC-BKG-03.test.jsx ไม่ผ่าน เพราะหน้าจอไม่ตรง spec แก้เฉพาะ frontend/src/pages/ConfirmBooking.jsx ให้ข้อความและจำนวนตัวเลือกตรงหมวดหน้าจอ (UI) ใน spec และเอาปุ่มยกเลิกการจองออก เพราะอยู่ใน Out of scope ห้ามแก้ test แล้วรัน npm test"
+- อ้างอิง: spec.md UI-BKG-02 (ต้องตรง: ข้อความ "ช่วงเวลาเต็ม" และ 3 ตัวเลือกพร้อมวันและเวลา), FR-BKG-03, Out of scope (UC-02), mockups/UI-BKG-02-confirm.html
+- สิ่งที่แก้ (ConfirmBooking.jsx ไฟล์เดียว):
+  - "เต็มแล้ว" -> "ช่วงเวลาเต็ม"
+  - แสดงตัวเลือก `.slice(0, 2)` -> `.slice(0, 3)`
+  - ลบปุ่ม "ยกเลิกการจอง" ฟังก์ชัน cancel() และ state cancelled (เรียก api.cancelBooking ซึ่งหลังบ้านลบไปแล้วตาม F-03)
+- ไม่ได้แก้ test
+- ผล npm test: 3 passed, 1 failed, 1 todo
+  - AC-BKG-03.test.jsx ผ่าน
+  - TC-BKG-01-2.test.jsx ไม่ผ่าน (TypeError อ่าน slot_date ของ undefined) เพราะ test ที่ AI เขียนรอบ /testcases สมมติ props `client`, `slotId` แต่หน้าจอจริงใช้ `api`, `slot` = test เขียนไม่ตรงกับหน้าจอ ไม่ใช่บั๊กของหน้าจอ รอทีมสั่งแก้ test แยก
+
+---
+
+## 2569-10-07 16.11 คำสั่ง: /verify specs/001-booking/ (รอบที่ 2)
+
+- ผลลัพธ์: เขียน specs/001-booking/rtm.md ใหม่ทั้งไฟล์ คง F-01 ถึง F-13 (ยกเว้น F-03) ไว้ด้วย F-ID เดิม ช่อง "ทีมตัดสิน" ยังว่างทุกข้อเหมือนเดิม
+- อ่านเพิ่ม: spec หมวด "หน้าจอ (UI)" (v3), mockups/UI-BKG-01, UI-BKG-02, SlotPicker.jsx, ConfirmBooking.jsx, App.jsx, client.js; ไม่มี specs/000-shared
+- ผล test: หลังบ้าน 7 passed; หน้าจอ 3 passed, 1 failed (TC-BKG-01-2.test.jsx), 1 todo (TC-BKG-01-1.test.jsx) รวม 10 ผ่าน 1 ไม่ผ่าน
+- ตารางไปข้างหน้า 15 ID: ครบ 1 / ยังไม่ถึง 5 / รอ 0 / ช่องโหว่ 9
+- แก้แล้ว: F-03 (ลบ DELETE /bookings และ cancel_booking ใน commit c7020a2)
+- ข้อค้นพบใหม่: F-14 ถึง F-23
+  - F-14 App.jsx สร้าง slot ปลอม (วันนี้ 09.00) ให้หน้ายืนยัน, F-15 client.js cancelBooking อยู่ใน Out of scope, F-16 ConfirmBooking แสดงเลขคิวทั้งที่รอ Q-02, F-17 SlotPicker ไม่มีการเลือก/แสดงวัน, F-18 "ว่าง N" ไม่ใช่ "เหลือ N ที่", F-19 TC-BKG-01-2.test.jsx ใช้ props ผิด, F-20 AC-BKG-03.test.jsx ไม่ตรวจวันและเวลา, F-21 รายการแพ็กเกจฝังในโค้ด, F-22 App.jsx ใช้วันที่ UTC, F-23 mockup มี "แจ้งเตือนก่อนวันตรวจ" ที่ spec ไม่ได้สั่ง
+- หมายเหตุ: มีโฟลเดอร์ซ้ำใน backend/ (backend/frontend/src, backend/specs ฯลฯ) ถูก commit มากับ 9065260; AC-BKG-03.test.jsx และ ConfirmBooking.jsx มีการแก้ใน working copy ที่ยังไม่ commit
+- ไม่ได้แก้โค้ด test spec plan tasks
