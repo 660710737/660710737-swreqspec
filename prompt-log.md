@@ -119,3 +119,25 @@
 - สิ่งที่แก้: backend/app/booking/service.py:26 จาก `slot.remaining < 0` เป็น `slot.remaining <= 0` (1 บรรทัด ไม่แก้ test)
 - ผล test หลังบ้าน (`cd backend && pytest -v`): 7 passed — TC-BKG-01-2 ผ่านแล้ว test เดิมผ่านครบ
 - ยังค้าง: test หน้าจอ TC-BKG-01-2.test.jsx ยังไม่ผ่าน เพราะ T-11 (ConfirmBooking.jsx) ยังไม่ได้ทำ; ชื่อ test ของ TC-BKG-01-1 / TC-BKG-01-2 ไม่ตรงตาราง รอทีมเลือก
+
+---
+
+## 2569-10-07 15.56 คำสั่ง: /verify specs/001-booking/
+
+- ผลลัพธ์: สร้าง specs/001-booking/rtm.md (ยังไม่มีฉบับก่อน)
+- ผล test: หลังบ้าน 7 passed; หน้าจอ 1 passed, 1 todo (TC-BKG-01-1 รอ Q-02), 1 ไฟล์ไม่ผ่าน (TC-BKG-01-2.test.jsx ยังไม่มี ConfirmBooking.jsx เพราะ T-11 ยังไม่ได้ทำ)
+- ตารางไปข้างหน้า 15 ID: ครบ 1 / ยังไม่ถึง 6 / รอ 0 / ช่องโหว่ 8
+- ข้อค้นพบใหม่: F-01 ถึง F-13
+  - F-01 ละเมิด IF-HIS-01 (รับและ log national_id), F-02 ละเมิด IF-IDP-01 (idp ตัวจำลอง), F-03 DELETE /bookings อยู่ใน Out of scope, F-04 DAYS_AHEAD 14 ไม่ใช่ 30, F-05 เดา Q-02 (A001), F-06 FR-BKG-01 ไม่มี AC, F-07 test_AC_BKG_05 ไม่ได้ยิงพร้อมกัน, F-08 ชื่อ test ไม่ตรง test-cases.md, F-09 FR-BKG-06 ไม่มี AC, F-10 เขตเวลาไม่ใช่ Asia/Bangkok, F-11 test_AC_BKG_01 assert แค่ 201, F-12 NFR-SEC-01 ไม่มี AC/task, F-13 NFR-USE-01 ไม่มี AC/task
+- ไม่ได้แก้โค้ด test spec plan tasks
+
+---
+
+## 2569-10-07 ทีมตัดสิน F-03: แก้โค้ด (ลบของแถมที่อยู่ใน Out of scope)
+
+- คำสั่ง: "แก้โค้ด: ของแถม อยู่ใน Out of scope (UC-02) ลบ endpoint และ cancel_booking ออก"
+- ก่อนหน้านั้นรัน grep ตรวจย้อนกลับ 5 ข้อจาก backend/ (endpoint, ตัวเลขคงที่, queue_no, national_id/logger, FR-BKG-) ไม่เจอเรื่องใหม่นอกจาก F-01, F-03, F-04, F-05 ใน rtm.md
+- สิ่งที่แก้: ลบ `DELETE /bookings/{booking_id}` (backend/app/booking/router.py) และ `cancel_booking` (backend/app/booking/service.py) ไม่มีที่อื่นเรียกใช้ ไม่ได้แก้ test
+- ผล test หลังบ้าน: 7 passed
+- endpoint ที่เหลือ: GET /slots, POST /bookings (ตรงกับ plan.md ข้อ 4 ส่วนที่ทำแล้ว)
+- ช่อง "ทีมตัดสิน" ของ F-03 ใน rtm.md ให้ทีมเขียนเอง; รอบ /verify ถัดไปจะย้าย F-03 ไปหัวข้อ "แก้แล้ว"
