@@ -54,3 +54,68 @@
 - ส่วนของ Then ที่ spec ไม่ได้บอกชัด: TC-BKG-01-1 ส่วน "แสดงหมายเลขคิว" ติด Q-02 (รูปแบบเลขคิวยังไม่กำหนด); TC-BKG-01-3 ไม่ได้ระบุรูปแบบ response/ข้อความเมื่อปฏิเสธเพราะยังไม่ยืนยันตัวตน เขียนไว้ว่า "spec ไม่ได้บอก"
 - ยังไม่เขียนโค้ด test ตามกฎโหมดร่าง
 - พบเพิ่มเติม (ไม่ใช่งานของคำสั่งนี้): บันทึก T-03 ใน prompt-log.md ระบุว่า AI เพิ่ม `DELETE /bookings/{id}` สำหรับยกเลิกการจอง ซึ่ง UC-02 (ยกเลิก/เลื่อนคิว) อยู่ใน Out of scope ของ spec.md ควรแจ้งทีมตรวจ
+
+---
+
+## 2569-10-07 คำสั่ง: /testcases AC-BKG-01 specs/001-booking/ (รอบที่ 2)
+
+- โหมด: เขียน test (ทีมแก้ TC-BKG-01-1 เป็น "ใช้ได้" และสลับลำดับ Then; TC-BKG-01-2, TC-BKG-01-3 ยังเป็น "ร่าง" จึงยังไม่เขียน)
+- TC ID ที่เขียน test: TC-BKG-01-1
+  - หลังบ้าน: เพิ่ม `test_TC_BKG_01_1_booking_success_and_seats_zero` ต่อท้าย backend/tests/test_AC_BKG_01.py (จำนวน test ในไฟล์ 1 -> 2) assert ส่วน 1) และ 2); ส่วน 3) รอ Q-02 เขียนแค่คอมเมนต์
+  - หน้าจอ: สร้าง frontend/src/__tests__/TC-BKG-01-1.test.jsx เป็น `test.todo` เพราะส่วนหน้าจอมีเฉพาะ "แสดงหมายเลขคิว" ซึ่งรอ Q-02
+- ผล test: หลังบ้าน 5 passed; หน้าจอ 1 passed, 1 todo
+- ข้อสังเกตที่พบระหว่างอ่านโค้ด (ไม่ได้แก้):
+  - backend/app/booking/service.py:26 ใช้ `slot.remaining < 0` ทำให้จองช่วงที่เหลือ 0 ที่ได้ (จะกระทบ TC-BKG-01-2 / AC-BKG-03)
+  - backend/app/booking/service.py:13-18 ออกเลขคิวรูปแบบ A001 รีเซ็ตรายวัน ซึ่งเป็นการตัดสินใจแทนทีมขณะ Q-02 ยังไม่มีคำตอบ
+  - backend/app/booking/router.py:19,25 รับและ log `national_id` ลง log ขัดกับ IF-HIS-01 / DOM-PDPA-01
+
+---
+
+## 2569-10-07 คำสั่ง: /testcases AC-BKG-01 specs/001-booking/ (รอบที่ 3)
+
+- โหมด: ไม่ได้ทำงาน (หยุด) — แถว "ใช้ได้" มีแค่ TC-BKG-01-1 ซึ่งมี test ในโค้ดแล้วจากรอบที่ 2; TC-BKG-01-2 และ TC-BKG-01-3 ยังเป็น "ร่าง"
+- TC ID ที่เขียน test: ไม่มี
+- ผล test: ไม่ได้รัน (ไม่มี test ใหม่)
+
+---
+
+## 2569-10-07 คำสั่ง: /testcases AC-BKG-01 specs/001-booking/ (รอบที่ 4)
+
+- โหมด: เขียน test (ทีมแก้ TC-BKG-01-2 เป็น "ใช้ได้"; TC-BKG-01-3 ยังเป็น "ร่าง" จึงยังไม่เขียน)
+- TC ID ที่เขียน test: TC-BKG-01-2
+  - หลังบ้าน: เพิ่ม `test_TC_BKG_01_2_full_slot_rejects_booking` ต่อท้าย backend/tests/test_AC_BKG_01.py (จำนวน test 2 -> 3)
+  - หน้าจอ: สร้าง frontend/src/__tests__/TC-BKG-01-2.test.jsx (สมมติ props `client`, `slotId` ของ ConfirmBooking ต้องให้ T-11 ยืนยัน)
+  - ไม่ assert ส่วน "ช่วงใกล้เคียง" เพราะ plan.md ข้อ 4 ไม่ได้กำหนดรูปแบบข้อมูลใน response 409
+- ผล test:
+  - หลังบ้าน 1 failed, 5 passed — TC-BKG-01-2 ไม่ผ่าน (assert 1 == 0) เป็นบั๊กของโค้ด: backend/app/booking/service.py:26 ใช้ `slot.remaining < 0` ช่วงที่เหลือ 0 จึงยังจองได้
+  - หน้าจอ: TC-BKG-01-2.test.jsx ไม่ผ่าน เพราะยังไม่มี frontend/src/pages/ConfirmBooking.jsx (T-11 ยังไม่ได้ทำ) ไม่ใช่บั๊ก
+- ไม่ได้แก้โค้ดของระบบ รอทีมตัดสินใจ
+
+---
+
+## 2569-10-07 คำสั่ง: /testcases AC-BKG-01 specs/001-booking/ (รอบที่ 5-6)
+
+- รอบที่ 5: หยุด ไม่ได้แก้ไฟล์ — ทีมเปลี่ยนช่อง "ชื่อ test" ของ TC-BKG-01-1 เป็น `test_TC_BKG_01_1_last_seat` และ TC-BKG-01-2 เป็น `test_TC_BKG_01_2_no_seat_left` ไม่ตรงชื่อในโค้ด ถามทีมว่าจะให้เปลี่ยนชื่อ test เดิม หรือแก้ตารางกลับ (ยังไม่ได้คำตอบ)
+- รอบที่ 6: โหมดเขียน test (ทีมแก้ TC-BKG-01-3 เป็น "ใช้ได้")
+- TC ID ที่เขียน test: TC-BKG-01-3 -> เพิ่ม `test_TC_BKG_01_3_not_verified` ต่อท้าย backend/tests/test_AC_BKG_01.py (จำนวน test 3 -> 4) ไม่ assert รูปแบบ response เพราะ spec ไม่ได้บอก
+- ผล test หลังบ้าน: 6 passed, 1 failed — TC-BKG-01-3 ผ่าน; TC-BKG-01-2 ยังไม่ผ่านจากบั๊กเดิม backend/app/booking/service.py:26
+- ยังค้าง: ชื่อ test ของ TC-BKG-01-1 / TC-BKG-01-2 ไม่ตรงตาราง รอทีมเลือก
+
+---
+
+## 2569-10-07 ทีมตัดสิน: แก้บั๊ก service.py:26 (แล้วสั่งคืนกลับ)
+
+- ทีมตัดสินว่าเหลือ 0 ที่แต่ยังจองได้ (ที่นั่งติดลบ = จองเกินโควตา) ขัด FR-BKG-03 ให้แก้โค้ด
+- AI แก้ backend/app/booking/service.py:26 จาก `slot.remaining < 0` เป็น `<= 0` ผล test หลังบ้าน 7 passed
+- ทีมขัดจังหวะแล้วสั่งให้แก้กลับเหมือนเดิม -> AI คืนเป็น `< 0` แล้ว (git diff ของ backend/app ว่าง) ผล test กลับเป็น 6 passed, 1 failed (TC-BKG-01-2)
+- สถานะ: บั๊กยังอยู่ รอทีมสั่งแก้แยกอีกครั้ง
+
+---
+
+## 2569-10-07 ทีมตัดสิน: แก้บั๊ก service.py:26 (สั่งรอบที่ 2)
+
+- คำสั่ง: "TC-BKG-01-2 ไม่ผ่าน เพราะโค้ดยอมให้จองเมื่อเหลือ 0 ที่ แก้เฉพาะ backend/app/booking/service.py ให้ปฏิเสธเมื่อไม่มีที่นั่ง ห้ามแก้ test แล้วรัน pytest -v และจดใน prompt-log"
+- เหตุผลของทีม: เหลือ 0 ที่แต่ยังจองได้ ทำให้ที่นั่งติดลบเป็น -1 คือจองเกินโควตา ขัด FR-BKG-03 (ต้องไม่สร้างรายการจองเมื่อเต็ม)
+- สิ่งที่แก้: backend/app/booking/service.py:26 จาก `slot.remaining < 0` เป็น `slot.remaining <= 0` (1 บรรทัด ไม่แก้ test)
+- ผล test หลังบ้าน (`cd backend && pytest -v`): 7 passed — TC-BKG-01-2 ผ่านแล้ว test เดิมผ่านครบ
+- ยังค้าง: test หน้าจอ TC-BKG-01-2.test.jsx ยังไม่ผ่าน เพราะ T-11 (ConfirmBooking.jsx) ยังไม่ได้ทำ; ชื่อ test ของ TC-BKG-01-1 / TC-BKG-01-2 ไม่ตรงตาราง รอทีมเลือก
