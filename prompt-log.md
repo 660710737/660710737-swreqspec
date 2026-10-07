@@ -131,3 +131,30 @@ tests/test_db_setup.py::test_bookings_table_has_no_national_id_column PASSED
 ### สถานะ
 
 - tasks.md: T-01 เปลี่ยนเป็น "เสร็จ รอทีมตรวจ"
+
+## 2569-09-23 คำสั่ง: /implement T-12 specs/001-booking/tasks.md
+
+- เครื่องมือ: Claude Code
+- ไฟล์ที่สร้าง/แก้: frontend/src/api/client.js (API จำลองตามสัญญา GET /slots), frontend/src/pages/SlotPicker.jsx,
+  frontend/src/App.jsx (ใส่ SlotPicker เข้าไปแสดง), frontend/src/__tests__/SlotPicker.test.jsx
+- ตรงกับช่อง "ไฟล์ที่แตะ" ของ T-12 ทั้งหมด ไม่มีไฟล์นอกรายการ
+
+### สิ่งที่เกือบต้องเดาแต่ถามแทน
+
+- ไม่มี — โครงไฟล์และ mock data ออกแบบตามสัญญา API ใน plan.md ข้อ 4 (GET /slots) และ FR-BKG-01/FR-BKG-06 ตรงไปตรงมา
+
+### ผล test
+
+```
+npx vitest run src/__tests__/SlotPicker.test.jsx
+✓ src/__tests__/SlotPicker.test.jsx (2 tests) 66ms
+Test Files  1 passed (1)
+Tests  2 passed (2)
+```
+
+รัน full suite (frontend) แล้วทั้ง 3 tests (setup.test.jsx เดิม + SlotPicker.test.jsx ใหม่) ผ่านหมด
+มี stderr warning "not wrapped in act(...)" ใน setup.test.jsx เดิม (ไฟล์นี้ไม่ได้อยู่ใน "ไฟล์ที่แตะ" ของ T-12 จึงไม่แก้ เป็นแค่ warning ไม่ทำให้ test fail)
+
+### สถานะ
+
+- tasks.md: T-12 เปลี่ยนเป็น "เสร็จ รอทีมตรวจ"

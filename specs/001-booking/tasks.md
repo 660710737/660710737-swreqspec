@@ -101,7 +101,7 @@ Feature: จองคิวตรวจสุขภาพ (Booking) | Spec ID: S
 - ไฟล์ที่แตะ: frontend/src/pages/SlotPicker.jsx, frontend/src/api/client.js, frontend/src/App.jsx, frontend/src/__tests__/SlotPicker.test.jsx
 - ต้องทำหลัง: ไม่มี
 - เสร็จเมื่อ: หน้าจอเรียก API จำลอง GET /slots แสดงรายการช่วงเวลาว่างพร้อมที่นั่งคงเหลือ และเปลี่ยนแพ็กเกจแล้วโหลดช่วงเวลาใหม่
-- สถานะ: พร้อมทำ
+- สถานะ: เสร็จ รอทีมตรวจ
 
 ### T-13 หน้ายืนยันการจอง และแจ้ง "ช่วงเวลาเต็ม" พร้อม 3 ตัวเลือก (ConfirmBooking)
 - รองรับ: FR-BKG-03, FR-BKG-04
